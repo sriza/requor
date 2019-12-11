@@ -57,36 +57,33 @@
         <th></th>
         {% for ques in question %}
 
-        <div id="post">
-            <tr>
-                <td>
-                    <h2>{{ques.title}}</h2>
-                    <h5><i><span>{{ques.posted_by}}</span>, {{ques.timestamp|date:'Y-M-D  h-m-s P'}}</i>
-                    </h5>
-                    {{ques.question_desc}}
+        <tr>
+            <td>
+                <h2>{{ques.title}}</h2>
+                <h5><i><span>{{ques.posted_by}}</span>, {{ques.timestamp|date:'Y-M-D  h-m-s P'}}</i>
+                </h5>
+                {{ques.question_desc|truncatechars:50 }}
+                <br>
+                {% if ques.question_img != '' %}
+                <br>
+                <img src="../../media/{{ques.question_img}}" style="width: 500px;">
+                {% endif %}
+                <hr>
+                <div>
+                    <div>Votes: {{ques.question_votes}}</div>
+
                     <br>
-                    <br>
-                    {% if ques.question_img != '' %}
-                    <img src="../../media/{{ques.question_img}}" style="width: 500px;">
-                    {% endif %}
-                    <hr>
 
-                    <div>
-                        <div>Votes: {{ques.question_votes}}</div>
+                    <div class="category">
+                        {{ques.category}}</div>
 
-                        <br>
+                </div>
 
-                        <div class="category">
-                            {{ques.category}}</div>
+                <hr>
 
-                    </div>
-
-                    <hr>
-
-                </td>
-
-            </tr>
-        </div>
+            </td>
+            <br>
+        </tr>
 
         {% endfor %}
     </table>
