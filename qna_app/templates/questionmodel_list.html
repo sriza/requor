@@ -20,6 +20,10 @@
             margin: 5px;
         }
 
+        th {
+            width: 80%;
+        }
+
         td {
             border: solid 2px;
             border-color: black palevioletred;
@@ -54,7 +58,11 @@
 
 <body>
     <table>
-        <th></th>
+        <th>
+
+            <a href="{% url 'addquestion' %}"><button>ADD QUESTIONS</button></a>
+
+        </th>
         {% for ques in question %}
 
         <div id="post">
@@ -75,6 +83,12 @@
                         <div>Votes: {{ques.question_votes}}</div>
 
                         <br>
+                        <div id="update">
+                            <a href="{%url 'update' ques.id%}"><button>UPDATE</button></a>
+                        </div>
+                        <div id="delete">
+                            <a href="{% url 'delete' ques.id %}"><button>Delete</button></a>
+                        </div>
 
                         <div class="category">
                             {{ques.category}}</div>

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import QuestionModel,AnswerModel,CategoryModel
+from .models import QuestionModel, AnswerModel, CategoryModel
+
 # Register your models here.
 
 admin.site.register(CategoryModel)
