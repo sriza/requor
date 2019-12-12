@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import QuestionModel, AnswerModel, CategoryModel
-from .forms import QuestionForm
+from .forms import QuestionForm, AnswerForm
 from django.http import HttpResponse
 from django.views.generic import CreateView, ListView
 
@@ -79,4 +79,16 @@ def vote(request, id):
     question.question_votes += 1
     question.save()
     return redirect("question")
+
+
+def comment(request):
+    form = AnswerForm(request.POST, request.FILES)
+    if form.is_valid():
+        try:
+            form.save()
+            return HttpResponse("Submitted")
+        except:
+            return HttpResponse("Failed")
+    else:
+        return HttpResponse(form.errors)
 

@@ -8,6 +8,7 @@ from .views import (
     QuestionModelCreateView,
     QuestionModelListView,
     vote,
+    comment,
 )
 
 urlpatterns = [
@@ -19,4 +20,5 @@ urlpatterns = [
     path("create/", QuestionModelCreateView.as_view(), name="create"),
     path("list/", QuestionModelListView.as_view(), name="list"),
     path("vote/<int:id>/", vote, name="vote"),
+    path("question/comment/", comment, name="comment"),
 ]

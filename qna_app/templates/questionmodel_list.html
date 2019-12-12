@@ -82,38 +82,46 @@
                     <div>
                         <div>
                             <div id="vote">
-                                <a href="{% url 'vote' ques.id %}"><button>Vote</button></a>
+                                <a href="{% url 'vote' ques.id %}"><button>VOTE</button></a>
                             </div>: {{ques.question_votes}}
                         </div>
 
                         <br>
-                        <div id="update">
+                        <div>
                             <a href="{%url 'update' ques.id%}"><button>UPDATE</button></a>
-                        </div>
-                        <div id="delete">
-                            <a href="{% url 'delete' ques.id %}"><button>Delete</button></a>
-                        </div>
 
+
+                            <a href="{% url 'delete' ques.id %}"><button>DELETE</button></a>
+
+                        </div>
                         <div class="category">
                             {{ques.category}}</div>
 
                     </div>
 
                     <hr>
+                    <div>
+                        <form method="POST" action="comment/" enctype="multipart/form-data">
+                            {%csrf_token%}
+                            {{form.errors}}
+                            <input type="text" name="ans_by" placeholder="name"><br>
+                            <input type="text" name="answer_desc" placeholder="addcomment"><br>
+                            <input type="hidden" name="ans_votes" value="0">
+                            <input type="hidden" name="is_accepted" value="0">
+                            Add image: <input type="file" name="answer_img">
+                            <input type="hidden" name="question" value="{{ques.id}}">
+
+                            <input type="submit" value="SUBMIT">
+
+                        </form>
+                    </div>
+                    <hr>
 
                 </td>
-
             </tr>
         </div>
-
         {% endfor %}
     </table>
-
-
-
-
-
-
 </body>
 
 </html>
