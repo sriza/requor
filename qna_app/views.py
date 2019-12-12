@@ -15,7 +15,6 @@ class QuestionModelCreateView(CreateView):
 class QuestionModelListView(ListView):
     model = QuestionModel
     queryset = QuestionModel.objects.all()
-    
 
 
 def addquestion(request):
@@ -73,4 +72,11 @@ def delete(request, id):
         return redirect("question")
     except:
         return HttpResponse(" deletion failed")
+
+
+def vote(request, id):
+    question = QuestionModel.objects.get(id=id)
+    question.question_votes += 1
+    question.save()
+    return redirect("question")
 

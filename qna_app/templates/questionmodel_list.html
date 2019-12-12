@@ -80,7 +80,11 @@
                     <hr>
 
                     <div>
-                        <div>Votes: {{ques.question_votes}}</div>
+                        <div>
+                            <div id="vote">
+                                <a href="{% url 'vote' ques.id %}"><button>Vote</button></a>
+                            </div>: {{ques.question_votes}}
+                        </div>
 
                         <br>
                         <div id="update">
