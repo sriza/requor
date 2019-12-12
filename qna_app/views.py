@@ -2,8 +2,20 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import QuestionModel, AnswerModel, CategoryModel
 from .forms import QuestionForm
 from django.http import HttpResponse
+from django.views.generic import CreateView, ListView
 
 # Create your views here.
+
+
+class QuestionModelCreateView(CreateView):
+    model = QuestionModel
+    fields = "__all__"
+
+
+class QuestionModelListView(ListView):
+    model = QuestionModel
+    queryset = QuestionModel.objects.all()
+    
 
 
 def addquestion(request):
@@ -20,8 +32,9 @@ def addquestion(request):
 
     else:
         form = QuestionForm
+        category = CategoryModel.objects.all()
         # question = QuestionModel.objects.all()
-        return render(request, "questionmodel_create.html", {"form": form})
+        return render(request, "questionmodel_create.html", {"category": category})
 
 
 def popular(request):
@@ -31,6 +44,7 @@ def popular(request):
 
 def question(request):
     question = QuestionModel.objects.all()
+
     return render(request, "questionmodel_list.html", {"question": question})
 
 
@@ -54,6 +68,9 @@ def update_question(request, id):
 
 
 def delete(request, id):
-    QuestionModel.objects.get(id=id).delete()
-    return HttpResponse("deleted")
+    try:
+        QuestionModel.objects.get(id=id).delete()
+        return redirect("question")
+    except:
+        return HttpResponse(" deletion failed")
 
