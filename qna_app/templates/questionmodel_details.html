@@ -8,18 +8,27 @@
 
 
 <body>
-    <div id="content">
-        <h2>{{question.title}}</h2>
-        <h4>{{question.posted_by}}</h4>
+    <div>
+        <div id="content">
+            <h2>{{question.title}}</h2>
+            <h4>{{question.posted_by}}</h4>
 
-        <p>{{question.question_desc}}</p>
+            <p>{{question.question_desc}}</p>
 
-        <img src="../../media/{{question.question_img}}">
+            <img src="../../media/{{question.question_img}}">
+            <hr>
+            <!-- <a href="{% url 'rvote' question.id %}"><button>VOTE</button></a>{{question.question_votes}} -->
+            <hr>
 
-        
+        </div>
 
-
-
+        <div>
+            {% for x in answer%}
+            <h4>{{x.ans_by}}</h4>
+            <p>{{x.answer_desc}}</p>
+            <hr>
+            {%endfor%}
+        </div>
     </div>
 
 </body>

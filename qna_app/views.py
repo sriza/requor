@@ -43,8 +43,10 @@ def popular(request):
 
 def question(request):
     question = QuestionModel.objects.all()
-
-    return render(request, "questionmodel_list.html", {"question": question})
+    answers = AnswerModel.objects.all()
+    return render(
+        request, "questionmodel_list.html", {"questions": question, "answer": answers}
+    )
 
 
 def update_question(request, id):
@@ -63,7 +65,10 @@ def update_question(request, id):
     else:
         form = QuestionForm(instance=question)
         # question = QuestionModel.objects.all()
-        return render(request, "questionmodel_create.html", {"form": form})
+        category = CategoryModel.objects.all()
+        return render(
+            request, "questionmodel_create.html", {"category": category, "form": form}
+        )
 
 
 def delete(request, id):
@@ -82,13 +87,77 @@ def vote(request, id):
 
 
 def comment(request):
-    form = AnswerForm(request.POST, request.FILES)
-    if form.is_valid():
-        try:
-            form.save()
-            return HttpResponse("Submitted")
-        except:
-            return HttpResponse("Failed")
+    if request.method == "POST":
+        form = AnswerForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                form.save()
+                return redirect("question")
+            except:
+                return HttpResponse("Failed")
+        else:
+            return HttpResponse(form.errors)
+
     else:
-        return HttpResponse(form.errors)
+        form = QuestionForm(instance=question)
+        # question = QuestionModel.objects.all()
+        category = CategoryModel.objects.all()
+        return render(
+            request, "questionmodel_create.html", {"category": category, "form": form}
+        )
+
+
+def update_answer(request, id):
+    ans = get_object_or_404(AnswerModel, id=id)
+    if request.method == "POST":
+        form = AnswerForm(request.POST, request.FILES, instance=ans)
+        if form.is_valid():
+            try:
+                form.save()
+                return redirect("question")
+            except:
+                return HttpResponse("Failed")
+        else:
+            return HttpResponse(form.errors)
+
+    else:
+        form = AnswerForm(instance=ans)
+        question = QuestionModel.objects.all()
+        answers = AnswerModel.objects.all()
+        # question = QuestionModel.objects.all()
+        return render(
+            request,
+            "questionmodel_list.html",
+            {"questions": question, "answer": answers, "form": form},
+        )
+
+
+def adelete(request, id):
+    try:
+        AnswerModel.objects.get(id=id).delete()
+        return redirect("question")
+    except:
+        return HttpResponse(" deletion failed")
+
+
+def avote(request, id):
+    ans = AnswerModel.objects.get(id=id)
+    ans.ans_votes += 1
+    ans.save()
+    return redirect("question")
+
+
+def rvote(request, id):
+    ans = AnswerModel.objects.get(id=id)
+    ans.ans_votes += 1
+    ans.save()
+    return redirect("readmore")
+
+
+def readmore(request, id):
+    que = QuestionModel.objects.get(id=id)
+    ans = AnswerModel.objects.filter(question=id)
+    return render(
+        request, "questionmodel_details.html", {"question": que, "answer": ans}
+    )
 

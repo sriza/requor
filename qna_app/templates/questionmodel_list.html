@@ -53,6 +53,15 @@
 
 
         }
+
+        .comment {
+            background-color: rgb(228, 225, 225);
+
+        }
+
+        hr {
+            background-color: slategray;
+        }
     </style>
 </head>
 
@@ -63,11 +72,11 @@
             <a href="{% url 'addquestion' %}"><button>ADD QUESTIONS</button></a>
 
         </th>
-        {% for ques in question %}
+        {% for ques in questions %}
 
         <div id="post">
             <tr>
-                <td>
+                <td id='{{ques.id}}'> 
                     <h2>{{ques.title}}</h2>
                     <h5><i><span>{{ques.posted_by}}</span>, {{ques.timestamp|date:'Y-M-D  h-m-s P'}}</i>
                     </h5>
@@ -80,45 +89,64 @@
                     <hr>
 
                     <div>
-                        <div>
-                            <div id="vote">
-                                <a href="{% url 'vote' ques.id %}"><button>VOTE</button></a>
-                            </div>: {{ques.question_votes}}
-                        </div>
 
+
+                        <a href="{% url 'vote' ques.id %}"><button>VOTE</button></a>{{ques.question_votes}}
+
+
+                        <a href="{%url 'update' ques.id%}"><button>UPDATE</button></a>
+
+                        <a href="{% url 'delete' ques.id %}"><button>DELETE</button></a>
+                        <a href="{% url 'readmore' ques.id %}"><button>READMORE</button></a>
                         <br>
-                        <div>
-                            <a href="{%url 'update' ques.id%}"><button>UPDATE</button></a>
-
-
-                            <a href="{% url 'delete' ques.id %}"><button>DELETE</button></a>
-
-                        </div>
-                        <div class="category">
-                            {{ques.category}}</div>
-
                     </div>
+                    <div class="category">
+                        {{ques.category}}</div>
 
-                    <hr>
-                    <div>
-                        <form method="POST" action="comment/" enctype="multipart/form-data">
-                            {%csrf_token%}
-                            {{form.errors}}
-                            <input type="text" name="ans_by" placeholder="name"><br>
-                            <input type="text" name="answer_desc" placeholder="addcomment"><br>
-                            <input type="hidden" name="ans_votes" value="0">
-                            <input type="hidden" name="is_accepted" value="0">
-                            Add image: <input type="file" name="answer_img">
-                            <input type="hidden" name="question" value="{{ques.id}}">
+        </div>
 
-                            <input type="submit" value="SUBMIT">
+        <hr>
+        <div>
+            <form method="POST" action="comment/" enctype="multipart/form-data">
+                {%csrf_token%}
+                {{form.errors}}
+                {{form}}
+                <input type="text" name="ans_by" placeholder="name"><br>
+                <input type="text" name="answer_desc" placeholder="addcomment"><br>
+                <input type="hidden" name="ans_votes" value="0">
+                <input type="hidden" name="is_accepted" value="0">
+                Add image: <input type="file" name="answer_img">
+                <input type="hidden" name="question" value="{{ques.id}}">
+                <input type="submit" value="SUBMIT">
 
-                        </form>
-                    </div>
-                    <hr>
+            </form>
+        </div>
+        <hr>
 
-                </td>
-            </tr>
+        <div class="comment">
+            {% for a in answer%}
+            {% if a.question == ques%}
+            <h4>{{a.ans_by}}</h4>
+            <p>{{a.answer_desc}}</p>
+            <hr>
+            <div>
+
+
+                <a href="{% url 'avote' a.id %}"><button>VOTE</button></a>{{a.ans_votes}}
+
+
+                <a href="{%url 'aupdate' a.id%}"><button>UPDATE</button></a>
+
+
+                <a href="{% url 'adelete' a.id %}"><button>DELETE</button></a>
+
+            </div>
+            {%endif%}
+            {%endfor%}
+
+        </div>
+        </td>
+        </tr>
         </div>
         {% endfor %}
     </table>
