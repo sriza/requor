@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+
+    <style>
+        table {
+            margin-left: 10%;
+            margin-right: 10%;
+            width: 80%;
+        }
+
+
+        tr {
+            margin: 5px;
+        }
+
+        td {
+            border: solid 2px;
+            border-color: black palevioletred;
+            align-self: auto;
+            border-spacing: 5%;
+            padding: 25px;
+            text-justify: auto;
+            margin: 15px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        body {
+            background-color: rgb(218, 216, 219);
+        }
+
+        i {
+            color: grey;
+        }
+
+        .category {
+            border-color: rgb(223, 220, 220);
+            background-color: rgb(184, 179, 179);
+            width: 100px;
+            text-align: center;
+            border-radius: 5px;
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <table>
+        <th></th>
+        {% for ques in question %}
+
+        <tr>
+            <td>
+                <h2>{{ques.title}}</h2>
+                <h5><i><span>{{ques.posted_by}}</span>, {{ques.timestamp|date:'Y-M-D  h-m-s P'}}</i>
+                </h5>
+                {{ques.question_desc|truncatechars:50 }}
+                <br>
+                {% if ques.question_img != '' %}
+                <br>
+                <img src="../../media/{{ques.question_img}}" style="width: 500px;">
+                {% endif %}
+                <hr>
+                <div>
+                    <div>Votes: {{ques.question_votes}}</div>
+
+                    <br>
+
+                    <div class="category">
+                        {{ques.category}}</div>
+
+                </div>
+
+                <hr>
+
+            </td>
+            <br>
+        </tr>
+
+        {% endfor %}
+    </table>
+
+
+
+
+
+
+</body>
+
+</html>
