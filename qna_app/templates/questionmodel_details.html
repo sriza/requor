@@ -1,36 +1,109 @@
-<html>
+{% extends 'base.html'%}
+{% load static %}
 
-<head>
+{% block title%}
+This is a different title
+{%endblock%}
 
+{% block styling%}
+<link href="{% static 'css/main.css'%}" rel="stylesheet" />
 
-    <style></style>
-</head>
-
-
-<body>
-    <div>
-        <div id="content">
-            <h2>{{question.title}}</h2>
-            <h4>{{question.posted_by}}</h4>
+{%endblock%}
+{%block main_body%}
+<div>
+    <div id="content">
+        <h2>{{question.title}}</h2>
+        <h5><i><span>{{question.posted_by}}</span>, {{question.timestamp|date:'Y-M-D  h-m-s P'}}</i>
 
             <p>{{question.question_desc}}</p>
 
-            <img src="../../media/{{question.question_img}}">
+            {% if question.question_img != '' %}
+            <img src="../../media/{{question.question_img}}" style="width: 500px;">
+            {% endif %}
             <hr>
-            <!-- <a href="{% url 'rvote' question.id %}"><button>VOTE</button></a>{{question.question_votes}} -->
+            <a href="{% url 'rvote' question.id %}"><button>VOTE: {{question.question_votes}}</button></a>
             <hr>
+            <div>
 
-        </div>
+                <form method="POST" action="/qna/question/readmore/{{question.id}}/rcomment/"
+                    enctype="multipart/form-data">
+                    {%csrf_token%}
+                    {{form.errors}}
+                    <input type="hidden" name="ans_by" placeholder="name" value={{request.session.name}}><br>
+                    <input type="text" name="answer_desc" placeholder="addcomment" style="width:100%; height:16%"><br>
+                    <input type="hidden" name="ans_votes" value="0">
+                    <input type="hidden" name="is_accepted" value="0">
+                    Add image: <input type="file" name="answer_img">
+                    <input type="hidden" name="question" value="{{question.id}}">
+                    <input type="submit" value="SUBMIT">
 
-        <div>
-            {% for x in answer%}
-            <h4>{{x.ans_by}}</h4>
-            <p>{{x.answer_desc}}</p>
-            <hr>
-            {%endfor%}
-        </div>
+                </form>
+            </div>
+
     </div>
 
-</body>
+    <div>
+        {% for x in answer%}
+        <hr>
+        <h5>{{x.ans_by}}</h5>
+        <p>{{x.answer_desc}}</p>
+        <hr>
+        <div>
 
-</html>
+
+            <a href="{% url 'avote' x.id %}"><button>VOTE:{{x.ans_votes}}</button></a>
+
+
+            <a href="{%url 'aupdate' x.id%}"><button>UPDATE</button></a>
+
+
+            <a href="{% url 'adelete' x.id %}"><button>DELETE</button></a>
+
+        </div>
+        {%endfor%}
+    </div>
+</div>
+{%endblock%}
+
+
+{% block left_bar%}
+<li><a href="">HEALTH</a></li>
+<li><a href="">SCIENCE</a></li>
+<li><a href="">RANDOM</a></li>
+{%endblock%}
+
+{% block right_bar%}
+<table>
+    <th></th>
+    {% for quest in questions %}
+
+    <tr>
+
+        <td>
+            <h2>{{quest.title}}</h2>
+            <h5><i><span>{{quest.posted_by}}</span>,
+                    <!--  {{ques.timestamp|date:'Y-M-D  h-m-s P'}} --></i>
+            </h5>
+            {{ques.question_desc|truncatechars:30 }}
+            <br>
+            <!--  {% if ques.question_img != '' %}
+            <br>
+            <img src="../../media/{{ques.question_img}}" style="width: 500px;">
+            {% endif %} -->
+            <div>
+                <div>Votes: {{quest.question_votes}}</div>
+                <div class="category">
+                    {{quest.category}}
+                </div> <a href="{% url 'readmore' quest.id %}"><button>READMORE</button></a>
+
+
+            </div>
+
+
+        </td>
+        <br>
+    </tr>
+
+    {% endfor %}
+    {%endblock%}
+</table>

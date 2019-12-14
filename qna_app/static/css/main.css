@@ -1,0 +1,53 @@
+table {
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+}
+
+
+tr {
+    margin: 5px;
+}
+
+th {
+    width: 80%;
+}
+
+td {
+    border: solid 1px;
+    border-color: black palevioletred;
+    align-self: auto;
+    border-spacing: 5%;
+    padding: 25px;
+    text-justify: auto;
+    margin: 15px;
+    background-color: rgb(247, 244, 244);
+    border-radius: 5px;
+}
+
+body {
+    background-color: rgb(218, 216, 219);
+}
+
+i {
+    color: grey;
+}
+
+.category {
+    border-color: rgb(223, 220, 220);
+    background-color: rgb(184, 179, 179);
+    width: 100px;
+    text-align: center;
+    border-radius: 5px;
+
+
+}
+
+.comment {
+    background-color: rgb(228, 225, 225);
+
+}
+
+hr {
+    background-color: slategray;
+}
