@@ -1,155 +1,145 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+{% block title%}
+This is a different title
+{%endblock%}
 
+{% block styling%}
+<link href="{% static 'css/main.css'%}" rel="stylesheet" />
 
-    <style>
-        table {
-            margin-left: 10%;
-            margin-right: 10%;
-            width: 80%;
-        }
+{%endblock%}
 
+{% block main_body %}
 
-        tr {
-            margin: 5px;
-        }
+<table>
+    <th>
 
-        th {
-            width: 80%;
-        }
+        <a href="{% url 'addquestion' %}"><button>ADD QUESTIONS</button></a>
 
-        td {
-            border: solid 2px;
-            border-color: black palevioletred;
-            align-self: auto;
-            border-spacing: 5%;
-            padding: 25px;
-            text-justify: auto;
-            margin: 15px;
-            background-color: white;
-            border-radius: 5px;
-        }
+    </th>
+    {% for ques in questions %}
 
-        body {
-            background-color: rgb(218, 216, 219);
-        }
+    <div id="post">
+        <tr>
+            <td id='{{ques.id}}'>
+                <h2>{{ques.title}}</h2>
+                <h5><i><span>{{ques.posted_by}}</span>, {{ques.timestamp|date:'Y-M-D  h-m-s P'}}</i>
+                </h5>
+                {{ques.question_desc|truncatechars:50 }}
+                <br>
+                <br>
+                {% if ques.question_img != '' %}
+                <img src="../../media/{{ques.question_img}}" style="width: 500px;">
+                {% endif %}
+                <hr>
 
-        i {
-            color: grey;
-        }
-
-        .category {
-            border-color: rgb(223, 220, 220);
-            background-color: rgb(184, 179, 179);
-            width: 100px;
-            text-align: center;
-            border-radius: 5px;
+                <div>
 
 
-        }
+                    <a href="{% url 'vote' ques.id %}"><button>VOTE: {{ques.question_votes}}</button></a>
 
-        .comment {
-            background-color: rgb(228, 225, 225);
 
-        }
+                    <a href="{%url 'update' ques.id%}"><button>UPDATE</button></a>
 
-        hr {
-            background-color: slategray;
-        }
-    </style>
-</head>
-
-<body>
-    <table>
-        <th>
-
-            <a href="{% url 'addquestion' %}"><button>ADD QUESTIONS</button></a>
-
-        </th>
-        {% for ques in questions %}
-
-        <div id="post">
-            <tr>
-                <td id='{{ques.id}}'> 
-                    <h2>{{ques.title}}</h2>
-                    <h5><i><span>{{ques.posted_by}}</span>, {{ques.timestamp|date:'Y-M-D  h-m-s P'}}</i>
-                    </h5>
-                    {{ques.question_desc}}
+                    <a href="{% url 'delete' ques.id %}"><button>DELETE</button></a>
+                    <a href="{% url 'readmore' ques.id %}"><button>READMORE</button></a>
                     <br>
-                    <br>
-                    {% if ques.question_img != '' %}
-                    <img src="../../media/{{ques.question_img}}" style="width: 500px;">
-                    {% endif %}
-                    <hr>
+                </div>
+                <div class="category">
+                    {{ques.category}}</div>
 
-                    <div>
+    </div>
 
+    <hr>
+    <div>
+        <form method="POST" action="comment/" enctype="multipart/form-data">
+            {%csrf_token%}
+            {{form.errors}}
+            <input type="hidden" name="ans_by" placeholder="name" value={{request.session.name}}><br>
+            <input type="text" name="answer_desc" placeholder="addcomment" style="width:100%; height:16%"><br>
+            <input type="hidden" name="ans_votes" value="0">
+            <input type="hidden" name="is_accepted" value="0">
+            Add image: <input type="file" name="answer_img">
+            <input type="hidden" name="question" value="{{ques.id}}">
+            <input type="submit" value="SUBMIT">
 
-                        <a href="{% url 'vote' ques.id %}"><button>VOTE</button></a>{{ques.question_votes}}
+        </form>
+    </div>
+    <hr>
 
-
-                        <a href="{%url 'update' ques.id%}"><button>UPDATE</button></a>
-
-                        <a href="{% url 'delete' ques.id %}"><button>DELETE</button></a>
-                        <a href="{% url 'readmore' ques.id %}"><button>READMORE</button></a>
-                        <br>
-                    </div>
-                    <div class="category">
-                        {{ques.category}}</div>
-
-        </div>
-
+    <!-- <div class="comment">
+        {% for a in answer%}
+        {% if a.question == ques%}
+        <h4>{{a.ans_by}}</h4>
+        <p>{{a.answer_desc}}</p>
         <hr>
         <div>
-            <form method="POST" action="comment/" enctype="multipart/form-data">
-                {%csrf_token%}
-                {{form.errors}}
-                {{form}}
-                <input type="text" name="ans_by" placeholder="name"><br>
-                <input type="text" name="answer_desc" placeholder="addcomment"><br>
-                <input type="hidden" name="ans_votes" value="0">
-                <input type="hidden" name="is_accepted" value="0">
-                Add image: <input type="file" name="answer_img">
-                <input type="hidden" name="question" value="{{ques.id}}">
-                <input type="submit" value="SUBMIT">
 
-            </form>
+
+            <a href="{% url 'avote' a.id %}"><button>VOTE</button></a>{{a.ans_votes}}
+
+
+            <a href="{%url 'aupdate' a.id%}"><button>UPDATE</button></a>
+
+
+            <a href="{% url 'adelete' a.id %}"><button>DELETE</button></a>
+
         </div>
-        <hr>
+        {%endif%}
+        {%endfor%}
 
-        <div class="comment">
-            {% for a in answer%}
-            {% if a.question == ques%}
-            <h4>{{a.ans_by}}</h4>
-            <p>{{a.answer_desc}}</p>
-            <hr>
+    </div> -->
+    </td>
+    </tr>
+    </div>
+    {% endfor %}
+</table>
+
+{%endblock%}
+
+{% block left_bar%}
+<li><a href="{% url 'random'%}">HEALTH</a></li>
+<li><a href="{% url 'science'%}">SCIENCE</a></li>
+<li><a href="{% url 'health' %}">RANDOM</a></li>
+{%endblock%}
+
+{% block right_bar%}
+<table>
+    <th></th>
+    {% for quest in questions %}
+
+    <tr>
+        <td>
+            <h2>{{quest.title}}</h2>
+            <h5><i><span>{{quest.posted_by}}</span>,
+                    <!--  {{ques.timestamp|date:'Y-M-D  h-m-s P'}} --></i>
+            </h5>
+            {{ques.question_desc|truncatechars:30 }}
+            <br>
+            <!--  {% if ques.question_img != '' %}
+            <br>
+            <img src="../../media/{{ques.question_img}}" style="width: 500px;">
+            {% endif %} -->
             <div>
+                <div>Votes: {{quest.question_votes}}</div>
 
+                <br>
 
-                <a href="{% url 'avote' a.id %}"><button>VOTE</button></a>{{a.ans_votes}}
+                <div class="category">
+                    {{quest.category}}</div>
+                <a href="{% url 'readmore' quest.id %}"><button>READMORE</button></a>
 
-
-                <a href="{%url 'aupdate' a.id%}"><button>UPDATE</button></a>
-
-
-                <a href="{% url 'adelete' a.id %}"><button>DELETE</button></a>
 
             </div>
-            {%endif%}
-            {%endfor%}
 
-        </div>
+
         </td>
-        </tr>
-        </div>
-        {% endfor %}
-    </table>
-</body>
+        <br>
+    </tr>
 
-</html>
+    {% endfor %}
+</table>
+
+
+{%endblock%}

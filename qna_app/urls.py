@@ -14,6 +14,11 @@ from .views import (
     update_answer,
     readmore,
     rvote,
+    rcomment,
+    test,
+    random,
+    science,
+    health,
 )
 
 urlpatterns = [
@@ -28,7 +33,11 @@ urlpatterns = [
     path("list/", QuestionModelListView.as_view(), name="list"),
     path("vote/<int:id>/", vote, name="vote"),
     path("avote/<int:id>/", avote, name="avote"),
-    path("rvote/<int:id>/", rvote, name="rvote"),
+    path("readmore/rvote/<int:id>/", rvote, name="rvote"),
     path("question/comment/", comment, name="comment"),
+    path("question/readmore/<int:id>/rcomment/", rcomment, name="rcomment"),
     path("readmore/<int:id>/", readmore, name="readmore"),
+    path("random/", random, name="random"),
+    path("health/", random, name="health"),
+    path("science/", random, name="science"),
 ]
